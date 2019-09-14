@@ -57,14 +57,12 @@ steps:
   env:
     AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
     AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-    COGNITO_ARN: $(COGNITO_ARN)
     HOST: $(HOST)
     PORT: $(PORT)
     USERNAME: $(USERNAME)
     PASSWORD: $(PASSWORD)
     DATABASE: $(DATABASE)
-    CERTIFICATE_ARN: $(CERTIFICATE_ARN)
-  condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+  condition: eq(variables['Build.Reason'], 'PullRequest')
 
 - task: Npm@1
   displayName: 'Deploying functions to PROD'
@@ -74,11 +72,9 @@ steps:
   env:
     AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
     AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-    COGNITO_ARN: $(COGNITO_ARN)
     HOST: $(HOST)
     PORT: $(PORT)
     USERNAME: $(USERNAME)
     PASSWORD: $(PASSWORD)
     DATABASE: $(DATABASE)
-    CERTIFICATE_ARN: $(CERTIFICATE_ARN)
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
