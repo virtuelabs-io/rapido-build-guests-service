@@ -62,7 +62,7 @@ steps:
     USERNAME: $(USERNAME)
     PASSWORD: $(PASSWORD)
     DATABASE: $(DATABASE)
-  condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+  condition: eq(variables['Build.Reason'], 'PullRequest')
 
 - task: Npm@1
   displayName: 'Deploying functions to PROD'
