@@ -1,0 +1,368 @@
+service: GuestsService
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: eu-west-2
+  host: ${env:HOST}
+  port: ${env:PORT}
+  database: ${env:DATABASE}
+  username: ${env:USERNAME}
+  password: ${env:PASSWORD}
+  logRetentionInDays: 7
+#   tracing:
+#     lambda: true
+#     apiGateway: true
+  logs:
+    restApi: true
+  vpc:
+    securityGroupIds:
+      - sg-bdeab9d6
+    subnetIds:
+      - subnet-9c76e2f5
+      - subnet-be6d8af2
+      - subnet-e9b86893
+package:
+  individually: true
+  excludeDevDependencies: true
+  exclude:
+    - test/**
+    - .git/**
+    - .serverless/**
+    - coverage/**
+    - README.md
+    - TODO.md
+    - LICENSE
+
+functions:
+  upsertGuestCartItem:
+    name: upsertGuestCartItem-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/upsertGuestCartItem.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to guest upsert cart item
+    events:
+      - http:
+          path: guest/cart/item
+          method: post
+          integration: lambda
+          cors:
+            origins:
+              - '*'
+            headers:
+              - Content-Type
+              - Authorization
+  getGuestCartItems:
+    name: getGuestCartItems-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/getGuestCartItems.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to get guest cart items
+    events:
+      - http:
+          path: guest/cart/items
+          method: get
+          integration: lambda
+          cors:
+            origins:
+              - '*'
+            headers:
+              - Content-Type
+              - Authorization
+  upsertGuestCartItems:
+    name: upsertGuestCartItems-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/upsertGuestCartItems.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to upsert guest cart items
+    events:
+      - http:
+          path: guest/cart/items
+          method: post
+          integration: lambda
+          cors:
+            origins:
+              - '*'
+            headers:
+              - Content-Type
+              - Authorization
+  deleteGuestCartItem:
+    name: deleteGuestCartItem-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/deleteGuestCartItem.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to delete guest cart item
+    events:
+      - http:
+          path: guest/cart/item/{id}
+          method: delete
+          request:
+            parameters:
+              paths:
+                id: true
+          integration: lambda
+          cors:
+            origins:
+              - '*'
+            headers:
+              - Content-Type
+              - Authorization
+  deleteGuestCartItems:
+    name: deleteGuestCartItems-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/deleteGuestCartItems.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to delete in guest cart items
+    events:
+      - http:
+          path: guest/cart/items
+          method: delete
+          integration: lambda
+          cors:
+            origins:
+              - '*'
+            headers:
+              - Content-Type
+              - Authorization
+  createGuestOrder:
+    name: createGuestOrder-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/createOrder.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to createGuestOrder
+    events:
+      - http:
+          path: guests/orders
+          method: post
+          integration: lambda
+          cors:
+            origins:
+              - '*'
+            headers:
+              - Content-Type
+              - Authorization
+  confirmGuestOrder:
+    name: confirmGuestOrder-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/confirmGuestOrder.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to confirmGuestOrder
+    # events:
+    #   - http:
+    #       path: guests/orders/{id}
+    #       method: put
+    #       request:
+    #         parameters:
+    #           paths:
+    #             id: true
+    #       integration: lambda
+    #       cors:
+    #         origins:
+    #           - '*'
+    #         headers:
+    #           - Content-Type
+    #           - Authorization
+  cancelGuestOrder:
+    name: cancelGuestOrder-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/cancelGuestOrder.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to cancelGuestOrder
+  getGuestOrder:
+    name: getGuestOrder-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/getGuestOrder.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to getGuestOrder
+    # events:
+    #   - http:
+    #       path: guests/orders/{id}
+    #       method: get
+    #       request:
+    #         parameters:
+    #           paths:
+    #             id: true
+    #       integration: lambda
+    #       cors:
+    #         origins:
+    #           - '*'
+    #         headers:
+    #           - Content-Type
+    #           - Authorization
+  getGuestAddressAndCommunication:
+    name: getGuestAddressAndCommunication-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/getGuestAddressAndCommunication.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to get getGuestAddressAndCommunication
+    # events:
+    #   - http:
+    #       path: guests/address
+    #       method: get
+    #       integration: lambda
+    #       cors:
+    #         origins:
+    #           - '*'
+    #         headers:
+    #           - Content-Type
+    #           - Authorization
+  upsertGuestAddressAndCommunication:
+    name: upsertGuestAddressAndCommunication-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/upsertGuestAddressAndCommunication.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to post upsertGuestAddressAndCommunication
+    events:
+      - http:
+          path: guests/address
+          method: post
+          integration: lambda
+          cors:
+            origins:
+              - '*'
+            headers:
+              - Content-Type
+              - Authorization
+  getGuestOrderPrice:
+    name: getGuestOrderPrice-${self:provider.stage}
+    role: GuestsFunctionsLambdaRole
+    handler: src/guests/getGuestOrderPrice.fun
+    memorySize: 128
+    timeout: 10
+    environment:
+      HOST: ${self:provider.host}
+      PORT: ${self:provider.port}
+      DATABASE: ${self:provider.database}
+      USERNAME: ${self:provider.username}
+      PASSWORD: ${self:provider.password}
+    tags:
+      purpose: lambda function to getGuestOrderPrice
+
+resources:
+  Resources:
+    GuestsFunctionsLambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: "sts:AssumeRole"
+        Path: /
+        Policies:
+          - PolicyName: logs
+            PolicyDocument:
+              Statement:
+                Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*:*"
+          - PolicyName: lambda
+            PolicyDocument:
+              Statement:
+                Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: "*"
+          - PolicyName: VPCAccess
+            PolicyDocument:
+              Statement:
+                Effect: Allow
+                Action:
+                  - "ec2:CreateNetworkInterface"
+                  - "ec2:DescribeNetworkInterfaces"
+                  - "ec2:DeleteNetworkInterface"
+                Resource: "*"
