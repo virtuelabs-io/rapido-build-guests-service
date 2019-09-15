@@ -32,7 +32,7 @@ module.exports.fun = async (event, context, callback) => {
     async function insertCartItems(element, callback){
         console.log("Running query", query);
         let rlt = await mysql.query(query, [
-                element.session_id,
+                event.path.id,
                 element.product_id,
                 element.quantity,
                 element.in_cart,

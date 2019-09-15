@@ -30,7 +30,7 @@ module.exports.fun = async (event, context, callback) => {
 
     console.log("Running query", query);
     let results = await mysql.query(query, [
-            data.session_id,
+            event.path.id,
             data.product_id,
             data.quantity,
             data.in_cart,

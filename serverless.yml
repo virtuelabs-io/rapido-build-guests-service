@@ -52,8 +52,12 @@ functions:
       purpose: lambda function to guest upsert cart item
     events:
       - http:
-          path: guests/cart/item
+          path: guests/{id}/cart/item
           method: post
+          request:
+            parameters:
+              paths:
+                id: true
           integration: lambda
           cors:
             origins:
@@ -77,8 +81,12 @@ functions:
       purpose: lambda function to get guest cart items
     events:
       - http:
-          path: guests/cart/items
+          path: guests/{id}/cart/items
           method: get
+          request:
+            parameters:
+              paths:
+                id: true
           integration: lambda
           cors:
             origins:
@@ -102,8 +110,12 @@ functions:
       purpose: lambda function to upsert guest cart items
     events:
       - http:
-          path: guests/cart/items
+          path: guests/{id}/cart/items
           method: post
+          request:
+            parameters:
+              paths:
+                id: true
           integration: lambda
           cors:
             origins:
@@ -127,7 +139,7 @@ functions:
       purpose: lambda function to delete guest cart item
     events:
       - http:
-          path: guests/cart/item/{id}
+          path: guests/{id}/cart/item
           method: delete
           request:
             parameters:
@@ -156,8 +168,12 @@ functions:
       purpose: lambda function to delete in guest cart items
     events:
       - http:
-          path: guests/cart/items
+          path: guests/{id}/cart/items
           method: delete
+          request:
+            parameters:
+              paths:
+                id: true
           integration: lambda
           cors:
             origins:

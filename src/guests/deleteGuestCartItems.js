@@ -19,7 +19,7 @@ module.exports.fun = async (event, context, callback) => {
         AND   in_cart = TRUE
     `;
     console.log("Running query", query);
-    let results = await mysql.query(query, [ event.body.session_id ])
+    let results = await mysql.query(query, [ event.path.id ])
     await mysql.end()
     return results
 }
