@@ -18,7 +18,7 @@ module.exports.fun = async (event, context, callback) => {
         CALL guests.create_order(UUID_TO_BIN(?),?);
     `;
     console.log("Running query", query);
-    let results = await mysql.query(query, [ data.session_id, data.delivery_cost_id ])
+    let results = await mysql.query(query, [ event.path.id, data.delivery_cost_id ])
     await mysql.end()
     return results
 }

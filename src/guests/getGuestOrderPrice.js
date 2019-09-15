@@ -13,6 +13,7 @@ const mysql = require('serverless-mysql')({
 
 module.exports.fun = async (event, context, callback) => {
     global.fetch = require('node-fetch');
+    console.log(event)
     let session_id = event.session_id
     let order_id = Number(event.order_id)
     let query = `

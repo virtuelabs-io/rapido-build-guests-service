@@ -12,7 +12,7 @@ const mysql = require('serverless-mysql')({
 
 module.exports.fun = async (event, context, callback) => {
     global.fetch = require('node-fetch');
-    let data = event.body
+    console.log(event)
     let query = `
         SELECT full_name,
             address_type_id,
@@ -29,7 +29,7 @@ module.exports.fun = async (event, context, callback) => {
     `;
 
     console.log("Running query", query);
-    let results = await mysql.query(query, [ data.session_id ] )
+    let results = await mysql.query(query, [ event.path.id ] )
     await mysql.end()
     return results
 }

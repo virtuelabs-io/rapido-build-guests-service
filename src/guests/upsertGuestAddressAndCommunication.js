@@ -12,6 +12,7 @@ const mysql = require('serverless-mysql')({
 
 module.exports.fun = async (event, context, callback) => {
     global.fetch = require('node-fetch');
+    console.log(event)
     let data = event.body
     let query = `
         INSERT INTO
@@ -44,7 +45,7 @@ module.exports.fun = async (event, context, callback) => {
 
     console.log("Running query", query);
     let results = await mysql.query(query, [
-            data.session_id,
+            event.path.id,
             data.full_name,
             data.address_type_id,
             data.addr_1,

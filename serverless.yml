@@ -140,7 +140,7 @@ functions:
     events:
       - http:
           path: guests/{id}/cart/item
-          method: delete
+          method: put
           request:
             parameters:
               paths:
@@ -197,8 +197,12 @@ functions:
       purpose: lambda function to createGuestOrder
     events:
       - http:
-          path: guests/orders
+          path: guests/{id}/orders
           method: post
+          request:
+            parameters:
+              paths:
+                id: true
           integration: lambda
           cors:
             origins:
@@ -319,8 +323,12 @@ functions:
       purpose: lambda function to post upsertGuestAddressAndCommunication
     events:
       - http:
-          path: guests/address
+          path: guests/{id}/address
           method: post
+          request:
+            parameters:
+              paths:
+                id: true
           integration: lambda
           cors:
             origins:
