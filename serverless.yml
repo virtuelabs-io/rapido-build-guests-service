@@ -184,7 +184,7 @@ functions:
   createGuestOrder:
     name: createGuestOrder-${self:provider.stage}
     role: GuestsFunctionsLambdaRole
-    handler: src/guests/createOrder.fun
+    handler: src/guests/createGuestOrder.fun
     memorySize: 128
     timeout: 10
     environment:
