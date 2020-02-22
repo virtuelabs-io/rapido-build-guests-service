@@ -17,7 +17,7 @@ module.exports.fun = async (event, context, callback) => {
     let session_id = event.session_id
     let order_id = Number(event.order_id)
     let query = `
-        SELECT order_price
+        SELECT order_price_total
         FROM guests.header
         WHERE session_id = UUID_TO_BIN(?)
         AND   id = ?;`
