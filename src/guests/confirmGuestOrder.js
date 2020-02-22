@@ -27,6 +27,9 @@ module.exports.fun = async (event, context, callback) => {
     `;
     console.log("Running query", query);
     let results = await mysql.query(query, [ data.session_id, order_id, data.charge_id ])
+    results._metadata = {
+        "guest": true
+    }
     await mysql.end()
     var params = {
         DelaySeconds: 5,
