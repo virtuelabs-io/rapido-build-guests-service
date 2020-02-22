@@ -10,6 +10,7 @@ provider:
   database: ${file(./config/${self:provider.stage}.json):database.database}
   username: ${file(./config/${self:provider.stage}.json):database.username}
   password: ${file(./config/${self:provider.stage}.json):database.password}
+  sqs-queue-url: ${file(./config/${self:provider.stage}.json):sqs-queue-url}
   logRetentionInDays: 7
 #   tracing:
 #     lambda: true
@@ -218,6 +219,8 @@ functions:
       DATABASE: ${self:provider.database}
       USERNAME: ${self:provider.username}
       PASSWORD: ${self:provider.password}
+      REGION: ${self:provider.region}
+      SQS_QUEUE_URL: ${self:provider.sqs-queue-url}
     tags:
       purpose: lambda function to confirmGuestOrder
     # events:
@@ -386,3 +389,23 @@ resources:
                   - "ec2:DescribeNetworkInterfaces"
                   - "ec2:DeleteNetworkInterface"
                 Resource: "*"
+    OrderConfirmationQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - { "Fn::GetAtt" : ["GuestsFunctionsLambdaRole", "Arn"]}
+            Action:
+            - sqs:SendMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+            - sqs:GetQueueUrl
+            - sqs:ListQueues
+            - sqs:ReceiveMessage
+            - sqs:SetQueueAttributes
+            Resource: "*"
+        Queues:
+          - ${self:provider.sqs-queue-url}
