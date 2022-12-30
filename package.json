@@ -24,7 +24,7 @@
     "jest-junit-reporter": "^1.1.0",
     "json-loader": "^0.5.7",
     "prettier": "^1.16.4",
-    "serverless": "^1.38.0",
+    "serverless": "^1.83.3",
     "serverless-domain-manager": "^2.6.6",
     "serverless-offline": "^4.9.0",
     "serverless-webpack": "^5.2.0",
